@@ -1,5 +1,5 @@
 {
-  "name": "@webreflection/idb-map",
+  "name": "idb-map-entries",
   "version": "0.3.1",
   "type": "module",
   "main": "index.js",
@@ -24,17 +24,17 @@
     },
     "./package.json": "./package.json"
   },
-  "author": "Andrea Giammarchi",
+  "author": "Percs (me@percs.dev)",
   "license": "MIT",
   "description": "Async IndexedDB based Map",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/WebReflection/idb-map.git"
+    "url": "git+https://github.com/Percslol/idb-map-entries.git"
   },
   "bugs": {
-    "url": "https://github.com/WebReflection/idb-map/issues"
+    "url": "https://github.com/Percslol/idb-map-entries/issues"
   },
-  "homepage": "https://github.com/WebReflection/idb-map#readme",
+  "homepage": "https://github.com/Percslol/idb-map#readme",
   "devDependencies": {
     "ascjs": "^6.0.3"
   }
