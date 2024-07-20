@@ -64,10 +64,10 @@ module.exports = class IDBMap extends EventTarget {
     this.#options = { durability };
     this.#db = new Promise((resolve, reject) => {
       assign(
-        indexedDB.open(this.#prefix),
+        indexedDB.open(this.#prefix, Math.floor(Math.random() * 100000) + 1),
         {
           onupgradeneeded({ target: { result, transaction } }) {
-            if (!result.objectStoreNames.length)
+            if (!result.objectStoreNames.contains(name))
               result.createObjectStore(name);
             transaction.oncomplete = () => resolve(result);
           },
