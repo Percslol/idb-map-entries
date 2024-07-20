@@ -45,7 +45,16 @@ export default class IDBMap extends EventTarget {
       }
     ));
   }
-
+  async getVersion(name) {
+    let version = 0;
+    const databases = await indexedDB.databases();
+    for (const db of databases) {
+      if (db.name === name) {
+        version = db.version;
+      }
+    }
+    return version;
+  }
   /**
    * @param {string} name
    * @param {IDBMapOptions} options
@@ -61,9 +70,9 @@ export default class IDBMap extends EventTarget {
     this.#prefix = prefix;
     this.#name = name;
     this.#options = { durability };
-    this.#db = new Promise((resolve, reject) => {
+    this.#db = new Promise(async (resolve, reject) => {
       assign(
-        indexedDB.open(this.#prefix, Math.floor(Math.random() * 100000) + 1),
+        indexedDB.open(this.#prefix, await this.getVersion(this.#prefix) + 1),
         {
           onupgradeneeded({ target: { result, transaction } }) {
             if (!result.objectStoreNames.contains(name))
