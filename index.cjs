@@ -1,7 +1,6 @@
 'use strict';
 const { assign } = Object;
 
-const STORAGE = 'entries';
 const READONLY = 'readonly';
 const READWRITE = 'readwrite';
 
@@ -28,6 +27,7 @@ module.exports = class IDBMap extends EventTarget {
   /** @type {Promise<IDBDatabase>} */ #db;
   /** @type {IDBMapOptions} */ #options;
   /** @type {string} */ #prefix;
+  /** @type {string} */ #name;
 
   /**
    * @template T
@@ -37,9 +37,9 @@ module.exports = class IDBMap extends EventTarget {
    */
   async #transaction(what, how) {
     const db = await this.#db;
-    const t = db.transaction(STORAGE, how, this.#options);
+    const t = db.transaction(this.#name, how, this.#options);
     return new Promise((onsuccess, onerror) => assign(
-      what(t.objectStore(STORAGE)),
+      what(t.objectStore(this.#name)),
       {
         onsuccess,
         onerror,
@@ -60,14 +60,15 @@ module.exports = class IDBMap extends EventTarget {
   ) {
     super();
     this.#prefix = prefix;
+    this.#name = name;
     this.#options = { durability };
     this.#db = new Promise((resolve, reject) => {
       assign(
-        indexedDB.open(`${this.#prefix}/${name}`),
+        indexedDB.open(this.#prefix),
         {
           onupgradeneeded({ target: { result, transaction } }) {
             if (!result.objectStoreNames.length)
-              result.createObjectStore(STORAGE);
+              result.createObjectStore(name);
             transaction.oncomplete = () => resolve(result);
           },
           onsuccess(event) {
